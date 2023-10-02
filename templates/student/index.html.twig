@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}First Try{% endblock %}
+
+{% block body %}
+    <link href="{{ asset('css/test.css') }}" rel="stylesheet"/>
+<div class="example-wrapper">
+    <h1 class="head">Hello {{ controller_name }}! ✅</h1>
+    This friendly message is coming from:
+    <ul>
+        <li>Your controller at <code><a href="{{ 'C:/Users/khalil/FirstProject/src/Controller/Student.php'|file_link(0) }}">src/Controller/AuthorController.php</a></code></li>
+        <li>Your template at <code><a href="{{ 'C:/Users/khalil/FirstProject/templates/index.html.twig'|file_link(0) }}">templates/author/index.html.twig</a></code></li>
+   {# </ul>{% set size = authors | length %} #}
+        {% for author in authors %}
+            <h3>{{ author.username | upper }}</h3>
+            <a href="{{ path('app_details', {'id': author.id}) }}">Details</a> {# fel twig bch t3adi path par button wela hkaya lzem path function #}
+        {% endfor %}
+        <br>
+   {# {% for author in authors %}
+        {% set size = size + author.nb_books %}
+    {% endfor %}#}
+    {% set pi = "Bye 5lil" %}
+<h2 class="head">{{pi}}</h2>
+    </ul>
+</div>
+{% endblock %}
