@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+{% block title %}Book Editor{% endblock %}
+{% block body %}
+    {{ form(book) }}
+    {{ form_end(book) }}
+    <a href="{{ path('app_book_get') }}">Back To List</a>
+{% endblock %}
