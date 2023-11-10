@@ -10,6 +10,8 @@
     </style>
 
     <div class="example-wrapper">
+        {{ form(booksearch)}}
+        {{ form_end(booksearch) }}
         {% if book|length != 0  %}
         {% for book in book %}
             <table>
@@ -31,6 +33,7 @@
             </table>
         {% endfor %}
         <p>Number of published Books: {{ book|length }}</p>
+        <p>Number of unpublished Books : {{ booknot|length }}</p>
         {% elseif book|length == 0 %}
             <p>Not found</p>
         {% endif %}

@@ -20,29 +20,24 @@ class AuthorRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Author::class);
     }
+    public function listauthorbymail()
+    {
+        return $this->createQueryBuilder('a')
+            ->orderBy('a.email','ASC')
+            ->getQuery()
+            ->getResult();
+    }
+    /*
+     * we use dql instead of querybuilder
+      public function listAuthorByMail()
+{
+    $entityManager = $this->getEntityManager();
 
-//    /**
-//     * @return Author[] Returns an array of Author objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    $dql = 'SELECT a FROM App\Entity\Author a ORDER BY a.email ASC';
 
-//    public function findOneBySomeField($value): ?Author
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    $query = $entityManager->createQuery($dql);
+
+    return $query->getResult();
+}
+     */
 }

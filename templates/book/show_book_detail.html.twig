@@ -8,23 +8,26 @@
         .example-wrapper table { width: 100%; border-collapse: collapse; }
         .example-wrapper th, .example-wrapper td { border: 1px solid #ccc; padding: 8px; text-align: left; }
     </style>
+
     <div class="example-wrapper">
-    <th>AuthorId : </th>
-    <td>{{ book.author.getId() }}</td>
-    <br>
-    <th>Ref : </th>
-    <td>{{ book.getRef() }}</td>
-        <br>
-    <th>Title : </th>
-    <td>{{ book.getTitle() }}</td>
-        <br>
-    <th>Category : </th>
-    <td>{{ book.getCategory() }}</td>
-        <br>
-    <th>publication date : </th>
-    <td>{{ book.getpublicationdate() | date('Y-m-d H:i:s') }}</td>
-        <br>
-    <th>Published : </th>
-    <th>{{ book.isPublished() }}</th>
+            {% for book in book %}
+                <table>
+                    <th>AuthorId</th>
+                    <td>{{ book.author.getId() }}</td>
+                    <th>Ref</th>
+                    <td>{{ book.getRef() }}</td>
+                    <th>Title</th>
+                    <td>{{ book.getTitle() }}</td>
+                    <th>Category</th>
+                    <td>{{ book.getCategory() }}</td>
+                    <th>publication date</th>
+                    <td>{{ book.getpublicationdate() | date('Y-m-d H:i:s') }}</td>
+                    <th>Published</th>
+                    <th>{{ book.isPublished() }}</th>
+                    <td><a href="{{ path('book_delete', {id: book.id}) }}">Delete</a></td>
+                    <td><a href="{{ path('book_show', {id: book.id}) }}">Show</a></td>
+                    <td><a href="{{ path('book_edit', {id: book.id}) }}">Edit</a></td>
+                </table>
+            {% endfor %}
     </div>
 {% endblock %}

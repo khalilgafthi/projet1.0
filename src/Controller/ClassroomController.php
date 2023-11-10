@@ -31,8 +31,9 @@ class ClassroomController extends AbstractController
     }
     // add student
     #[Route('/classroom/new', name: 'app_classroom_new')]
-    public function addStudent(Request $request, EntityManagerInterface $entityManager): Response
+    public function addStudent(Request $request, ManagerRegistry $entityManager): Response
     {
+        $em = $entityManager->getManager();
         $form = $this->createForm(ClassroomType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -40,8 +41,8 @@ class ClassroomController extends AbstractController
             $classroom = new Classroom();
             $classroom->setName($data->getName());
             $classroom->setNbTable($data->getNbTable());
-            $entityManager->persist($classroom);
-            $entityManager->flush();
+            $em->persist($classroom);
+            $em->flush();
             return $this->redirectToRoute('app_classroom_get');
         }
         return $this->render('classroom/add_classroom.html.twig', [

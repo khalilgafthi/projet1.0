@@ -12,7 +12,7 @@ class BookSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('Ref')
+            ->add('ref')
             ->add('search',SubmitType::class)
         ;
     }

@@ -18,7 +18,7 @@ class Author
     #[ORM\Column(length: 250)]
     private ?string $username = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255,)]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]

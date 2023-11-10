@@ -15,33 +15,28 @@ use Symfony\Component\Routing\Annotation\Route;
 class BookController extends AbstractController
 {
     #[Route('/book/display', name: 'book_all')]
-    public function displayAll( ManagerRegistry $manager): Response
+    public function displayAll( ManagerRegistry $manager , BookRepository $book): Response
     {
-        $em = $manager->getManager();
+       /* $em = $manager->getManager();
         $emm = $manager->getManager();
-       // $books = $em->createQuery('select count(b) FROM App\Entity\Book b WHERE b.category = \'Mystery\'')->getSingleScalarResult();
-        //$booksall = $emm->createQuery('select count(b) FROM App\Entity\Book b')->getSingleScalarResult();
-        /*$booksYears = $emm->createQuery('SELECT b FROM App\Entity\Book b WHERE b.publicationdate >= :start_date AND b.publicationdate < :end_date')
+        $books = $em->createQuery('select count(b) FROM App\Entity\Book b WHERE b.category = \'Mystery\'')->getSingleScalarResult();
+        $booksall = $emm->createQuery('select count(b) FROM App\Entity\Book b')->getSingleScalarResult();
+        $booksYears = $emm->createQuery('SELECT b FROM App\Entity\Book b WHERE b.publicationdate >= :start_date AND b.publicationdate < :end_date')
             ->setParameters(['start_date' => '2022-01-01', 'end_date' => '2023-01-01'])
-            ->getResult(); */
+            ->getResult();
         $books = $em->createQuery('DELETE FROM App\Entity\Book b WHERE b.category = \'Mystery\'')->getResult() ;
         return $this->render('book/show_book.html.twig',[
             'book' => $books,
+        ]); */
+                $books =$book->before2023andjoin();
+                return $this->render('book/show_book_detail.html.twig', [
+                 'book' => $books,
         ]);
     }
-    #[Route('/book/search/{ref}', name: 'book_search')]
-    public function show_details(BookRepository $repository, $ref): Response
-    {
-        $book = $repository->find($ref);
-        return $this->render('book/show_book_detail.html.twig', [
-            'book' => $book,
-        ]);
-    }
-
     #[Route('/book/show/{id}', name: 'book_show')]
-    public function show_detail(BookRepository $repository, $id): Response
+    public function show_detail($id,ManagerRegistry $m): Response
     {
-        $book = $repository->find($id);
+        $book = $m->getRepository(Book::class)->find($id);
         return $this->render('book/show_book_detail.html.twig', [
             'book' => $book,
         ]);
@@ -49,25 +44,28 @@ class BookController extends AbstractController
 
     // display books in array
     #[Route('/book/get', name: 'app_book_get')]
-    public function showDetailsBooks(Request $request, BookRepository $bookRepository): Response
+    public function showDetailsBooks(Request $request, BookRepository $bookRepository, BookRepository $repository): Response
     {
-        $booksearch = new Book();
-        $form = $this->createForm(BookSearchType::class, $booksearch);
+        $form = $this->createForm(BookSearchType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $formData = $form->getData();
-            $books = $bookRepository->findBy(['published' => 1]);
-            $book_not_published = $bookRepository->findBy(['published' => 0]);
+            $ref = $formData['ref'];
+            $book = $repository->searchById($ref);
+            return $this->render('book/show_book_detail.html.twig', [
+                'book' => $book,
+            ]);
         } else {
             $books = $bookRepository->findBy(['published' => 1]);
-            $book_not_published = $bookRepository->findBy(['published' => 0]);
+            $bookNotPublished = $bookRepository->findBy(['published' => 0]);
         }
         return $this->render('book/show_book.html.twig', [
             'booksearch' => $form->createView(),
             'book' => $books,
-            'booknot' => $book_not_published,
+            'booknot' => $bookNotPublished,
         ]);
     }
+
 
     #[Route('/book/new', name: 'app_book_new')]
     public function addAuthor(Request $request, EntityManagerInterface $entityManager): Response
