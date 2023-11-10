@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\Author;
 use App\Entity\Book;
+use Doctrine\DBAL\Types\TextType;
+use SebastianBergmann\CodeCoverage\Report\Text;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;

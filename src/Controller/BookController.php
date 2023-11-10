@@ -1,7 +1,7 @@
 <?php
-
 namespace App\Controller;
 use App\Entity\Book;
+use App\Form\BookSearchType;
 use App\Form\BookType;
 use App\Form\EditBookType;
 use App\Repository\BookRepository;
@@ -11,27 +11,64 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 class BookController extends AbstractController
 {
-    #[Route('/book/show/{id}', name: 'book_show')]
-    public function show_detail(BookRepository $repository, $id) : Response
+    #[Route('/book/display', name: 'book_all')]
+    public function displayAll( ManagerRegistry $manager): Response
     {
-        $book = $repository->find($id);
-        return $this->render('book/show_book_detail.html.twig',[
+        $em = $manager->getManager();
+        $emm = $manager->getManager();
+       // $books = $em->createQuery('select count(b) FROM App\Entity\Book b WHERE b.category = \'Mystery\'')->getSingleScalarResult();
+        //$booksall = $emm->createQuery('select count(b) FROM App\Entity\Book b')->getSingleScalarResult();
+        /*$booksYears = $emm->createQuery('SELECT b FROM App\Entity\Book b WHERE b.publicationdate >= :start_date AND b.publicationdate < :end_date')
+            ->setParameters(['start_date' => '2022-01-01', 'end_date' => '2023-01-01'])
+            ->getResult(); */
+        $books = $em->createQuery('DELETE FROM App\Entity\Book b WHERE b.category = \'Mystery\'')->getResult() ;
+        return $this->render('book/show_book.html.twig',[
+            'book' => $books,
+        ]);
+    }
+    #[Route('/book/search/{ref}', name: 'book_search')]
+    public function show_details(BookRepository $repository, $ref): Response
+    {
+        $book = $repository->find($ref);
+        return $this->render('book/show_book_detail.html.twig', [
             'book' => $book,
         ]);
     }
+
+    #[Route('/book/show/{id}', name: 'book_show')]
+    public function show_detail(BookRepository $repository, $id): Response
+    {
+        $book = $repository->find($id);
+        return $this->render('book/show_book_detail.html.twig', [
+            'book' => $book,
+        ]);
+    }
+
     // display books in array
     #[Route('/book/get', name: 'app_book_get')]
-    public function showDetailsBooks(BookRepository $bookRepository): Response
+    public function showDetailsBooks(Request $request, BookRepository $bookRepository): Response
     {
-        $books = $bookRepository->findBy(['published' => 1]);
+        $booksearch = new Book();
+        $form = $this->createForm(BookSearchType::class, $booksearch);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+            $books = $bookRepository->findBy(['published' => 1]);
             $book_not_published = $bookRepository->findBy(['published' => 0]);
+        } else {
+            $books = $bookRepository->findBy(['published' => 1]);
+            $book_not_published = $bookRepository->findBy(['published' => 0]);
+        }
         return $this->render('book/show_book.html.twig', [
+            'booksearch' => $form->createView(),
             'book' => $books,
             'booknot' => $book_not_published,
         ]);
     }
+
     #[Route('/book/new', name: 'app_book_new')]
     public function addAuthor(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -50,12 +87,13 @@ class BookController extends AbstractController
             'book' => $form->createView(),
         ]);
     }
+
     // edit book function
     #[Route('/book/edit/{id}', name: 'book_edit')]
-    public function edit(BookRepository $repository, $id, Request $request , ManagerRegistry $registry) : Response
+    public function edit(BookRepository $repository, $id, Request $request, ManagerRegistry $registry): Response
     {
         $book = $repository->find($id);
-        $form = $this->createForm(EditBookType::class,$book);
+        $form = $this->createForm(EditBookType::class, $book);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $registry->getManager();
@@ -64,23 +102,23 @@ class BookController extends AbstractController
             $em->flush();
             return $this->redirectToRoute("app_book_get");
         }
-        return $this->render('book/edit_book.html.twig', [ 'book' => $form->createView(), ]);
+        return $this->render('book/edit_book.html.twig', ['book' => $form->createView(),]);
     }
+
     // delete book function
     #[Route('/book/delete/{id}', name: 'book_delete')]
-    public function delete_book($id,ManagerRegistry $registry): Response
+    public function delete_book($id, ManagerRegistry $registry): Response
     {
         $delete = $registry->getManager();
-        if(!$id)
-        {
+        if (!$id) {
             throw $this->createNotFoundException('No ID found');
         }
         $book = $delete->getRepository(Book::class)->find($id);
-        if($book != null)
-        {
+        if ($book != null) {
             $delete->remove($book);
             $delete->flush();
         }
         return $this->redirectToRoute('app_book_get');
     }
+
 }

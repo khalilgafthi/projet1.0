@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reader Details{% endblock %}
+
+{% block body %}
+    <style>
+        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+        .example-wrapper table { width: 100%; border-collapse: collapse; }
+        .example-wrapper th, .example-wrapper td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    </style>
+    <div class="example-wrapper">
+        <table>
+            <tr>
+                <th>Reader Id:</th>
+                <td>{{ reader.getId() }}</td>
+            </tr>
+            <tr>
+                <th>Reader Username:</th>
+                <td>{{ reader.getUsername() }}</td>
+            </tr>
+            <tr>
+                <th>Readed Books:</th>
+                <td>
+                    <ul>
+                        {% for book in reader.getBook() %}
+                            <li>{{ book.getTitle() }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}

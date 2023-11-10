@@ -6,7 +6,7 @@ use App\Entity\Author;
 use Doctrine\ORM\Mapping\Entity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -31,7 +31,7 @@ class BookType extends AbstractType
             ->add('Author', EntityType::class, [
                 'class' => Author::class,
                 'choice_label' => function (Author $author) {
-                    return sprintf('%s (%d)', $author->getUsername(), $author->getId());
+                    return sprintf('%s (%d)', $author->getEmail(), $author->getId());
                 }
             ])
             ->add('add',SubmitType::class)

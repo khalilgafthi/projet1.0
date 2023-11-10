@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reader Details{% endblock %}
+
+{% block body %}
+    <style>
+        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+        .example-wrapper table { width: 100%; border-collapse: collapse; }
+        .example-wrapper th, .example-wrapper td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    </style>
+
+    <div class="example-wrapper">
+        {% for reader in reader %}
+            <table>
+                <th>ID</th>
+                <td>{{ reader.getId() }}</td>
+                <th>Lastname</th>
+                <td>{{ reader.getUsername() | upper }}</td>
+                <th>Details: </th>
+                <td><a href="{{ path('reader_show_details', {id: reader.id}) }}">Show Details</a></td>
+            </table>
+        {% endfor %}
+    </div>
+{% endblock %}

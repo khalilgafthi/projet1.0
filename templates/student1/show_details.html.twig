@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Author Details{% endblock %}
+
+{% block body %}
+    <style>
+        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+        .example-wrapper table { width: 100%; border-collapse: collapse; }
+        .example-wrapper th, .example-wrapper td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    </style>
+
+    <div class="example-wrapper">
+        {% for student in student %}
+            <table>
+                <th>ID</th>
+                <td>{{ student.getId() }}</td>
+                <th>Lastname</th>
+                <td>{{ student.getLastname() | upper }}</td>
+                <th>Email</th>
+                <td>{{ student.getFirstname() }}</td>
+                <th>Number of Books</th>
+                <td>{{ student.getBirthday() | date('Y-m-d H:i:s') }}</td>
+                <th>Delete</th>
+                <td><a href="{{ path('student_delete', {id: student.id}) }}">Delete</a></td>
+                <td><a href="{{ path('app_student_edit', {id: student.id}) }}">Edit</a></td>
+            </table>
+        {% endfor %}
+    </div>
+{% endblock %}

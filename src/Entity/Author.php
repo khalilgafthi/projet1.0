@@ -116,7 +116,7 @@ class Author
 
         return $this;
     }
-    public function addNbBooks(): self
+    public function addNbBooks():self
     {
         $this->nb_books += 1;
         return $this;
